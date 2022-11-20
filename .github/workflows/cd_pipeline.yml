@@ -23,7 +23,7 @@ jobs:
           python-version: 3.9
 
     - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.GIT_ID }}
         aws-secret-access-key: ${{ secrets.GIT_SECRET }}
