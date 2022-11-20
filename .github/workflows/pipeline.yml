@@ -39,7 +39,7 @@ jobs:
               pytest test_main.py                 
 
         - name: ZIP build
-          run:  zip -r example-mlops_${{ github.run_id }}.zip .
+          run:  zip -r example-mlops_${{ github.run_id }}.zip lambda_function.py library main.py
 
         - name: Configure AWS Credentials
           uses: aws-actions/configure-aws-credentials@v1
