@@ -1,5 +1,6 @@
 from main import feature
 import numpy as np
+import pytest
 
 def test_answer_3():
     value_int,value_bis, value_intd1, value_qua, value_eig = feature(3)

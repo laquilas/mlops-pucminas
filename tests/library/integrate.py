@@ -5,25 +5,18 @@ return_path()
 
 from library.integrate import trapz_x
 
-def test_integrate(x, y_pred):
+def test_integrate_1():
+    x, y_pred =[1,2,3], 4
     assert trapz_x(x) == y_pred
+    print(f"PASS 1")
 
-def test_integrate_error(x, y_pred):
-    assert trapz_x(x) != y_pred    
+def test_integrate_2():
+    x,dx, y_pred =[1,2,3], 2, 8
+    assert trapz_x(x) != y_pred 
+    print(f"PASS 2")   
 
 if __name__ == "__main__":
     print("===== Test Integrate =====")
-    x, y_pred =[1,2,3], 4
-    test_integrate(x, y_pred)
-    print(f"PASS 1")
-
-    x,dx, y_pred =[1,2,3], 2, 8
-    test_integrate_error(x, y_pred)
-    print(f"PASS 2")
+    test_integrate_1()
+    test_integrate_2()
     print("========== END ==========")    
-
-
-#test2
-#x =[1,2,3]
-#dx = 2
-#y_pred = 8

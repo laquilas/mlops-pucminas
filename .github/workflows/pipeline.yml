@@ -30,4 +30,10 @@ jobs:
             run: |
                 pytest test_main.py
 
-            
+          - name: Test simple functions - library
+            run: |
+                pytest ./test/library/bisection.py
+                pytest ./test/library/eigenvalues_eigenvectors.py
+                pytest ./test/library/integrate.py
+                pytest ./test/library/interpolation_1d.py
+                pytest ./test/library/optimize.py  
