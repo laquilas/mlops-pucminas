@@ -39,4 +39,4 @@ jobs:
               pytest test_main.py                 
 
         - name: ZIP build
-        run:  zip -r example-mlops_${{ github.run_id }}.zip library lambda_function.py main.py -i example-mlops
+          run:  zip -r example-mlops_${{ github.run_id }}.zip library lambda_function.py main.py -i example-mlops
