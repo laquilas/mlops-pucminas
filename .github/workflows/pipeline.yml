@@ -1,0 +1,78 @@
+name: Continuous integration
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  ci_pipeline:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+          with:
+            fetch-depth: 0
+
+        - name: Set up Python 3.9
+          uses: actions/setup-python@v2
+          with:
+              python-version: 3.9
+
+        - name: Install dependencies
+          run: |
+              python -m pip install --upgrade pip
+              if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+        - name: Test simple functions - library
+          run: |
+              pytest tests/library/bisection.py
+              pytest tests/library/eigenvalues_eigenvectors.py
+              pytest tests/library/integrate.py
+              pytest tests/library/interpolation_1d.py
+              pytest tests/library/optimize.py 
+
+        - name: Test main
+          run: |
+              pytest test_main.py                 
+
+        - name: ZIP build
+          run:  zip -r example-mlops_${{ github.run_id }}.zip library lambda_function.py main.py -i example-mlops
+
+  cd_pipeline:
+      runs-on: ubuntu-latest
+      if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+      steps:
+        - uses: actions/checkout@v2
+          with:
+            fetch-depth: 0
+
+        - name: Set up Python 3.9
+          uses: actions/setup-python@v2
+          with:
+              python-version: 3.9
+
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.GIT_ID }}
+            aws-secret-access-key: ${{ secrets.GIT_SECRET }}
+            aws-region: sa-east-1
+        
+
+
+        - name: Upload to S3
+          run: aws s3 cp ${{ github.run_id }}.zip s3://las-mlops/pucminas/example-mlops_${{ github.run_id }}.zip
+
+        - name: Update lambda function code
+          run: aws lambda update-function-code --function-name example-mlops --s3-bucket s3://las-mlops/pucminas --s3-key example-mlops_${{ github.run_id }}.zip
+
+        - name: Sleep for 5 seconds
+          run: sleep 5s
+          shell: bash
+
+        - name: Release lambda function version
+          run: aws lambda publish-version --function-name example-mlops --description ${{ github.run_id }}
