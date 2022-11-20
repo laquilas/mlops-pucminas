@@ -29,9 +29,8 @@ jobs:
         aws-secret-access-key: ${{ secrets.GIT_SECRET }}
         aws-region: sa-east-1
     
-
     - name: ZIP build
-      run:  zip ${{ github.run_id }}.zip example-mlops
+      run:  zip -r ${{ github.run_id }}.zip example-mlops
 
     - name: Upload to S3
       run: aws s3 cp ${{ github.run_id }}.zip s3://las-mlops/pucminas//${{ github.run_id }}.zip
