@@ -53,7 +53,7 @@ jobs:
           run: aws s3 cp example-mlops_${{ github.run_id }}.zip s3://las-mlops/pucminas/example-mlops_${{ github.run_id }}.zip
 
         - name: Update lambda function code
-          run: aws lambda update-function-code --function-name example-mlops --s3-bucket las-mlops/pucminas --s3-key example-mlops_${{ github.run_id }}.zip
+          run: aws lambda update-function-code --function-name example-mlops --s3-bucket las-mlops --s3-key pucminas/example-mlops_${{ github.run_id }}.zip
 
         - name: Sleep for 5 seconds
           run: sleep 5s
